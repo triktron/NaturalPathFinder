@@ -26,27 +26,44 @@ public class NaturalPathEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Waypoint Settings", EditorStyles.boldLabel);
+        _Path.DrawWaypoints = EditorGUILayout.Toggle("Draw Waypoints", _Path.DrawWaypoints);
         _HandleSize = EditorGUILayout.FloatField("Handle Size", _HandleSize);
 
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Grid Settings", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
+        _Path.DrawGrid = EditorGUILayout.Toggle("Draw DrawGrid", _Path.DrawGrid);
         var newGridSize = EditorGUILayout.DelayedFloatField("Grid Size", _Path.GridSize);
         if (newGridSize != _Path.GridSize)
         {
             _Path.GridSize = newGridSize;
         }
         EditorGUILayout.EndHorizontal();
+
+        foreach (var path in _Path.GetPaths())
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField(path.GetName() + " Settings", EditorStyles.boldLabel);
+
+            path.DrawGridLines = EditorGUILayout.Toggle("Draw Grid Lines", path.DrawGridLines);
+            path.DrawSplineLines = EditorGUILayout.Toggle("Draw Spline Lines", path.DrawSplineLines);
+            path.GridLineColor = EditorGUILayout.ColorField("Grid Line Color", path.GridLineColor);
+            path.SplineColor = EditorGUILayout.ColorField("Spline Color", path.SplineColor);
+        }
     }
 
     void Draw()
     {
-        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.Grid)) _Path.GetGrid().DrawGridHandles(_HandleSize);
-        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.StaightPathGrid)) _Path.GetStraightPath().DrawHandlesGrid();
-        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.StraightPathSpline)) _Path.GetStraightPath().DrawHandlesSpline();
+        if (_Path.DrawGrid) _Path.GetGrid().DrawGridHandles(_HandleSize);
 
-        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.Waypoints)) {
+        foreach (var path in _Path.GetPaths())
+        {
+            path.DrawHandlesGrid();
+            path.DrawHandlesSpline();
+        }
+
+        if (_Path.DrawWaypoints) {
             Handles.color = Color.green;
             for (int i = 0; i < _Path.PointCount - 1; i++)
             {

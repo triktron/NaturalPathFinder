@@ -5,19 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Terrain), typeof(TerrainCollider))]
 public class NaturalPath : MonoBehaviour
 {
-    [System.Flags]
-    public enum DrawFlags
-    {
-        Grid = 1,
-        Waypoints = 2,
-        StaightPathGrid = 4,
-        StraightPathSpline = 8
-    }
+    [HideInInspector] public bool DrawGrid = false;
+    [HideInInspector] public bool DrawWaypoints = false;
 
     private List<Vector2> _Points = new List<Vector2>();
     private float _GridSize = 50f;
-
-    public DrawFlags Draw = DrawFlags.Waypoints;
 
     public float GridSize
     {
@@ -33,8 +25,13 @@ public class NaturalPath : MonoBehaviour
     private Terrain _Terrain;
     private TerrainCollider _TerrainCollider;
     private Grid _Grid;
-    private Path _StraightPath;
 
+    private bool _PathsInitialized = false;
+    private Path[] _Paths = new Path[2]
+    {
+        new StraightPath(),
+        new ShortestPath()
+    };
 
     public Terrain GetTerrain()
     {
@@ -54,16 +51,19 @@ public class NaturalPath : MonoBehaviour
         return _Grid;
     }
 
-    public Path GetStraightPath()
+    public Path[] GetPaths()
     {
-        if (_StraightPath == null)
-        {
-            _StraightPath = new StraightPath();
-            _StraightPath.Init(GetGrid());
-        }
-        return _StraightPath;
-    }
+        //if (!_PathsInitialized)
+        //{
+            //_PathsInitialized = true;
 
+            foreach (var path in _Paths)
+            {
+                path.Init(GetGrid());
+            }
+        //}
+        return _Paths;
+    }
 
     public int PointCount => _Points.Count;
     public List<Vector2> LocalPoints => _Points;
@@ -97,32 +97,37 @@ public class NaturalPath : MonoBehaviour
             Vector3 localPoint = pos - transform.position;
 
             _Points[index] = new Vector2(localPoint.x, localPoint.z);
-            UpdateStraightPath();
+            UpdatePaths();
         }
     }
 
-    private void UpdateStraightPath()
+    private void UpdatePaths()
     {
-        _StraightPath.CalcualtePath(_Points.Select(p => GetGrid().SnapToPosition(p)).ToList());
+        var waypoints = _Points.Select(p => GetGrid().SnapToPosition(p)).ToList();
+
+        foreach (var path in GetPaths())
+        {
+            path.CalcualtePath(waypoints);
+        }
     }
 
     public void AddPoint(Vector3 pos)
     {
         Vector3 localPoint = pos - transform.position;
         _Points.Add(new Vector2(localPoint.x, localPoint.z));
-        UpdateStraightPath();
+        UpdatePaths();
     }
 
     public void InsertPoint(int index, Vector3 pos)
     {
         Vector3 localPoint = pos - transform.position;
         _Points.Insert(index+1, new Vector2(localPoint.x, localPoint.z));
-        UpdateStraightPath();
+        UpdatePaths();
     }
 
     public void RemovePoint(int index)
     {
         _Points.RemoveAt(index);
-        UpdateStraightPath();
+        UpdatePaths();
     }
 }

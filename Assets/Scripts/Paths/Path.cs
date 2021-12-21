@@ -7,6 +7,11 @@ using UnityEngine;
 
 public abstract class Path
 {
+    public bool DrawGridLines = false;
+    public bool DrawSplineLines = false;
+    public Color GridLineColor = Color.cyan;
+    public Color SplineColor = Color.red;
+
     public Grid _Grid;
     public Spline _Spline;
 
@@ -18,23 +23,27 @@ public abstract class Path
     }
 
     public abstract void CalcualtePath(List<Grid.Position> waypoints);
+    public abstract string GetName();
 
     public void DrawHandlesGrid()
     {
-        Handles.color = Color.cyan;
-        for (int i = 0; i < PathNodes.Length - 1; i++)
+        if (DrawGridLines)
         {
-            Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes[i]), Vector3.up, 2);
-            Handles.DrawLine(_Grid.GetPoint(PathNodes[i]), _Grid.GetPoint(PathNodes[i + 1]), 1);
-        }
+            Handles.color = GridLineColor;
+            for (int i = 0; i < PathNodes.Length - 1; i++)
+            {
+                Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes[i]), Vector3.up, 2);
+                Handles.DrawLine(_Grid.GetPoint(PathNodes[i]), _Grid.GetPoint(PathNodes[i + 1]), 1);
+            }
 
-        if (PathNodes.Length != 0) Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes.Last()), Vector3.up, 2);
+            if (PathNodes.Length != 0) Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes.Last()), Vector3.up, 2);
+        }
     }
     public void DrawHandlesSpline()
     {
-        if (_Spline != null)
+        if (_Spline != null && DrawSplineLines)
         {
-            Handles.color = Color.red;
+            Handles.color = SplineColor;
 
             var segCount = 20 * PathNodes.Length;
             var seg = 1f / segCount;

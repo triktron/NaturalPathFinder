@@ -20,6 +20,7 @@ public class NaturalPathEditor : Editor
         Input();
     }
 
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -39,11 +40,19 @@ public class NaturalPathEditor : Editor
             _Path.GridSize = newGridSize;
         }
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Result Settings", EditorStyles.boldLabel);
+        _Path.DrawStraightPath = EditorGUILayout.Toggle("Draw straight path", _Path.DrawStraightPath);
     }
 
     void Draw()
     {
         var grid = _Path.GetGrid();
+        if (_Path.DrawStraightPath)
+        {
+            _Path.GetStraightPath().DrawHandles();
+        }
 
         Handles.color = Color.green;
         for (int i = 0; i < _Path.PointCount - 1; i++)

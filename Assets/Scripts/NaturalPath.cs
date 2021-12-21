@@ -9,6 +9,7 @@ public class NaturalPath : MonoBehaviour
     private float _GridSize = 50f;
     
     public bool DrawGrid = false;
+    public bool DrawStraightPath = false;
     public float GridSize
     {
         get => _GridSize;
@@ -23,6 +24,7 @@ public class NaturalPath : MonoBehaviour
     private Terrain _Terrain;
     private TerrainCollider _TerrainCollider;
     private Grid _Grid;
+    private Path _StraightPath;
 
 
     public Terrain GetTerrain()
@@ -42,6 +44,17 @@ public class NaturalPath : MonoBehaviour
         if (_Grid == null) _Grid = new Grid(GetTerrain(), _GridSize);
         return _Grid;
     }
+
+    public Path GetStraightPath()
+    {
+        if (_StraightPath == null)
+        {
+            _StraightPath = new StraightPath();
+            _StraightPath.Init(GetGrid());
+        }
+        return _StraightPath;
+    }
+
 
     public int PointCount => _Points.Count;
     public List<Vector2> LocalPoints => _Points;
@@ -75,23 +88,32 @@ public class NaturalPath : MonoBehaviour
             Vector3 localPoint = pos - transform.position;
 
             _Points[index] = new Vector2(localPoint.x, localPoint.z);
+            UpdateStraightPath();
         }
+    }
+
+    private void UpdateStraightPath()
+    {
+        _StraightPath.CalcualtePath(_Points.Select(p => GetGrid().SnapToPosition(p)).ToList());
     }
 
     public void AddPoint(Vector3 pos)
     {
         Vector3 localPoint = pos - transform.position;
         _Points.Add(new Vector2(localPoint.x, localPoint.z));
+        UpdateStraightPath();
     }
 
     public void InsertPoint(int index, Vector3 pos)
     {
         Vector3 localPoint = pos - transform.position;
         _Points.Insert(index+1, new Vector2(localPoint.x, localPoint.z));
+        UpdateStraightPath();
     }
 
     public void RemovePoint(int index)
     {
         _Points.RemoveAt(index);
+        UpdateStraightPath();
     }
 }

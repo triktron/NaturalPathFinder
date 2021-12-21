@@ -20,7 +20,6 @@ public class NaturalPathEditor : Editor
         Input();
     }
 
-
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -43,11 +42,7 @@ public class NaturalPathEditor : Editor
 
     void Draw()
     {
-        var grid = _Path.GetGrid();
-
-        Handles.color = Color.red;
-        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.Grid)) grid.DrawGridHandles(_HandleSize);
-
+        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.Grid)) _Path.GetGrid().DrawGridHandles(_HandleSize);
         if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.StaightPathGrid)) _Path.GetStraightPath().DrawHandlesGrid();
         if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.StraightPathSpline)) _Path.GetStraightPath().DrawHandlesSpline();
 

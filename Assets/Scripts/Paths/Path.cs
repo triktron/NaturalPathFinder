@@ -1,3 +1,4 @@
+using kmty.NURBS;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using UnityEngine;
 public abstract class Path
 {
     public Grid _Grid;
-    public kmty.NURBS.Spline _Spline;
+    public Spline _Spline;
 
     public Grid.Position[] PathNodes = new Grid.Position[0];
 
@@ -34,9 +35,18 @@ public abstract class Path
         if (_Spline != null)
         {
             Handles.color = Color.red;
-            var seg = 0.01f;
-            for (float t = 0; t < 1 - seg; t += seg)
-                Handles.DrawLine(_Spline.GetCurve(t), _Spline.GetCurve(t + seg), 3);
+
+            var segCount = 20 * PathNodes.Length;
+            var seg = 1f / segCount;
+            var lastSeg = _Spline.GetCurve(0);
+
+            for (int i = 0; i <= segCount; i++)
+            {
+                var t = seg * i;
+                var currentSeg = _Spline.GetCurve(t);
+                Handles.DrawLine(lastSeg, currentSeg, 3);
+                lastSeg = currentSeg;
+            }
         }
     }
 

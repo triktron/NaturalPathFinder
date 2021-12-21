@@ -68,6 +68,7 @@ public class Grid
 
     public void DrawGridHandles(float handleSize = 2f)
     {
+        Handles.color = Color.red;
         for (int x = 0; x < _Segments.x; x++)
         {
             for (int y = 0; y < _Segments.y; y++)

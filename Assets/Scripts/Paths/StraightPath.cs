@@ -1,8 +1,7 @@
-using System.Collections;
+using kmty.NURBS;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utils;
 
 public class StraightPath : Path
 {
@@ -25,7 +24,7 @@ public class StraightPath : Path
 
         PathNodes = RemoveInlinePoints(path,1f).ToArray();
 
-        _Spline = new kmty.NURBS.Spline(PathNodes.Select(p => new kmty.NURBS.CP(_Grid.GetPoint(p),1)).ToArray(), 4);
+        _Spline = new Spline(PathNodes.Select(p => new CP(_Grid.GetPoint(p),1)).ToArray(), 4);
 
 
         // ----- old ----

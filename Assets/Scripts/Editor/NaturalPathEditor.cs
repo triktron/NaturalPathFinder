@@ -20,7 +20,6 @@ public class NaturalPathEditor : Editor
         Input();
     }
 
-
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -28,10 +27,24 @@ public class NaturalPathEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Waypoint Settings", EditorStyles.boldLabel);
         _HandleSize = EditorGUILayout.FloatField("Handle Size", _HandleSize);
+
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Grid Settings", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal();
+        _Path.DrawGrid = EditorGUILayout.Toggle("Draw Grid", _Path.DrawGrid);
+        var newGridSize = EditorGUILayout.DelayedFloatField("Grid Size", _Path.GridSize);
+        if (newGridSize != _Path.GridSize)
+        {
+            _Path.GridSize = newGridSize;
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     void Draw()
     {
+        var grid = _Path.GetGrid();
+
         Handles.color = Color.green;
         for (int i = 0; i < _Path.PointCount - 1; i++)
         {
@@ -50,7 +63,12 @@ public class NaturalPathEditor : Editor
                     _Path.SetWorldPoint(i, hit);
             }
         }
+
+        Handles.color = Color.red;
+        if (_Path.DrawGrid) grid.DrawGridHandles(_HandleSize);
     }
+
+    
 
     void Input()
     {

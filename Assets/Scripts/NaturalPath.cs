@@ -6,8 +6,24 @@ using UnityEngine;
 public class NaturalPath : MonoBehaviour
 {
     private List<Vector2> _Points = new List<Vector2>();
+    private float _GridSize = 50f;
+    
+    public bool DrawGrid = false;
+    public float GridSize
+    {
+        get => _GridSize;
+        set
+        {
+            _GridSize = value;
+            GetGrid().SetGridSize(_GridSize);
+        }
+    }
+
+
     private Terrain _Terrain;
     private TerrainCollider _TerrainCollider;
+    private Grid _Grid;
+
 
     public Terrain GetTerrain()
     {
@@ -19,6 +35,12 @@ public class NaturalPath : MonoBehaviour
     {
         if (_TerrainCollider == null) _TerrainCollider = GetComponent<TerrainCollider>();
         return _TerrainCollider;
+    }
+
+    public Grid GetGrid()
+    {
+        if (_Grid == null) _Grid = new Grid(GetTerrain(), _GridSize);
+        return _Grid;
     }
 
     public int PointCount => _Points.Count;

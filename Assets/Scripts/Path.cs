@@ -7,12 +7,14 @@ using UnityEngine;
 public abstract class Path
 {
     public Grid _Grid;
+    public Spline _Spline;
 
     public Grid.Position[] PathNodes = new Grid.Position[0];
 
     public virtual void Init(Grid grid)
     {
         _Grid = grid;
+        _Spline = new Spline();
     }
 
     public abstract void CalcualtePath(List<Grid.Position> waypoints);
@@ -27,6 +29,12 @@ public abstract class Path
         }
 
         if (PathNodes.Length != 0) Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes.Last()), Vector3.up, 2);
+
+        if (PathNodes.Length >= 4)
+        {
+            _Spline.Points = PathNodes.Select(p => _Grid.GetPoint(p)).ToArray();
+            _Spline.DrawHandles();
+        }
     }
 
     public List<Grid.Position> RemoveInlinePoints(List<Grid.Position> points, float maxDist) {

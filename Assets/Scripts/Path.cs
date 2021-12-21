@@ -7,19 +7,18 @@ using UnityEngine;
 public abstract class Path
 {
     public Grid _Grid;
-    public Spline _Spline;
+    public kmty.NURBS.Spline _Spline;
 
     public Grid.Position[] PathNodes = new Grid.Position[0];
 
     public virtual void Init(Grid grid)
     {
         _Grid = grid;
-        _Spline = new Spline();
     }
 
     public abstract void CalcualtePath(List<Grid.Position> waypoints);
 
-    public void DrawHandles()
+    public void DrawHandlesGrid()
     {
         Handles.color = Color.cyan;
         for (int i = 0; i < PathNodes.Length - 1; i++)
@@ -29,11 +28,15 @@ public abstract class Path
         }
 
         if (PathNodes.Length != 0) Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes.Last()), Vector3.up, 2);
-
-        if (PathNodes.Length >= 4)
+    }
+    public void DrawHandlesSpline()
+    {
+        if (_Spline != null)
         {
-            _Spline.Points = PathNodes.Select(p => _Grid.GetPoint(p)).ToArray();
-            _Spline.DrawHandles();
+            Handles.color = Color.red;
+            var seg = 0.01f;
+            for (float t = 0; t < 1 - seg; t += seg)
+                Handles.DrawLine(_Spline.GetCurve(t), _Spline.GetCurve(t + seg), 3);
         }
     }
 

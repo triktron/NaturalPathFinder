@@ -33,51 +33,45 @@ public class NaturalPathEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Grid Settings", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
-        _Path.DrawGrid = EditorGUILayout.Toggle("Draw Grid", _Path.DrawGrid);
         var newGridSize = EditorGUILayout.DelayedFloatField("Grid Size", _Path.GridSize);
         if (newGridSize != _Path.GridSize)
         {
             _Path.GridSize = newGridSize;
         }
         EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Result Settings", EditorStyles.boldLabel);
-        _Path.DrawStraightPath = EditorGUILayout.Toggle("Draw straight path", _Path.DrawStraightPath);
     }
 
     void Draw()
     {
         var grid = _Path.GetGrid();
-        if (_Path.DrawStraightPath)
-        {
-            _Path.GetStraightPath().DrawHandles();
-        }
-
-        Handles.color = Color.green;
-        for (int i = 0; i < _Path.PointCount - 1; i++)
-        {
-            Handles.DrawLine(_Path.GetWorldPoint(i), _Path.GetWorldPoint(i + 1), 1);
-        }
 
         Handles.color = Color.red;
-        for (int i = 0; i < _Path.PointCount; i++)
-        {
-            Vector3 pos = _Path.GetWorldPoint(i);
-            Vector3 newPos = Handles.FreeMoveHandle(pos, Quaternion.identity, _HandleSize, Vector2.zero, Handles.SphereHandleCap);
-            if (newPos != pos)
+        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.Grid)) grid.DrawGridHandles(_HandleSize);
+
+        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.StaightPathGrid)) _Path.GetStraightPath().DrawHandlesGrid();
+        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.StraightPathSpline)) _Path.GetStraightPath().DrawHandlesSpline();
+
+        if (_Path.Draw.HasFlag(NaturalPath.DrawFlags.Waypoints)) {
+            Handles.color = Color.green;
+            for (int i = 0; i < _Path.PointCount - 1; i++)
             {
-                Undo.RecordObject(_Path, "Move Point");
-                if (RaycastTerrain(out var hit))
-                    _Path.SetWorldPoint(i, hit);
+                Handles.DrawLine(_Path.GetWorldPoint(i), _Path.GetWorldPoint(i + 1), 1);
+            }
+
+            Handles.color = Color.red;
+            for (int i = 0; i < _Path.PointCount; i++)
+            {
+                Vector3 pos = _Path.GetWorldPoint(i);
+                Vector3 newPos = Handles.FreeMoveHandle(pos, Quaternion.identity, _HandleSize, Vector2.zero, Handles.SphereHandleCap);
+                if (newPos != pos)
+                {
+                    Undo.RecordObject(_Path, "Move Point");
+                    if (RaycastTerrain(out var hit))
+                        _Path.SetWorldPoint(i, hit);
+                }
             }
         }
-
-        Handles.color = Color.red;
-        if (_Path.DrawGrid) grid.DrawGridHandles(_HandleSize);
     }
-
-    
 
     void Input()
     {

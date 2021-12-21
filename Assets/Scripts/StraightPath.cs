@@ -25,6 +25,8 @@ public class StraightPath : Path
 
         PathNodes = RemoveInlinePoints(path,1f).ToArray();
 
+        _Spline = new kmty.NURBS.Spline(PathNodes.Select(p => new kmty.NURBS.CP(_Grid.GetPoint(p),1)).ToArray(), 4);
+
 
         // ----- old ----
 

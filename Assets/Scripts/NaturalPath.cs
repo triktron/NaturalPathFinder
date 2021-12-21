@@ -5,11 +5,20 @@ using UnityEngine;
 [RequireComponent(typeof(Terrain), typeof(TerrainCollider))]
 public class NaturalPath : MonoBehaviour
 {
+    [System.Flags]
+    public enum DrawFlags
+    {
+        Grid = 1,
+        Waypoints = 2,
+        StaightPathGrid = 4,
+        StraightPathSpline = 8
+    }
+
     private List<Vector2> _Points = new List<Vector2>();
     private float _GridSize = 50f;
-    
-    public bool DrawGrid = false;
-    public bool DrawStraightPath = false;
+
+    public DrawFlags Draw = DrawFlags.Waypoints;
+
     public float GridSize
     {
         get => _GridSize;

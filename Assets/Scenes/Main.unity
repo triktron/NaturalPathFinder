@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bc8db84d643e9d4b8e81ed7693fa01f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Draw: 10
 --- !u!154 &789882935
 TerrainCollider:
   m_ObjectHideFlags: 0

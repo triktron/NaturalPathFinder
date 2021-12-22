@@ -8,7 +8,9 @@ public class NaturalPath : MonoBehaviour
     [HideInInspector] public bool DrawGrid = false;
     [HideInInspector] public bool DrawWaypoints = false;
 
+    [SerializeField]
     private List<Vector2> _Points = new List<Vector2>();
+    [SerializeField, HideInInspector]
     private float _GridSize = 50f;
 
     public float GridSize
@@ -27,10 +29,9 @@ public class NaturalPath : MonoBehaviour
     private Grid _Grid;
 
     private bool _PathsInitialized = false;
-    private Path[] _Paths = new Path[2]
+    [SerializeField]
+    private Path[] _Paths = new Path[0]
     {
-        new StraightPath(),
-        new ShortestPath()
     };
 
     public Terrain GetTerrain()
@@ -101,7 +102,7 @@ public class NaturalPath : MonoBehaviour
         }
     }
 
-    private void UpdatePaths()
+    public void UpdatePaths()
     {
         var waypoints = _Points.Select(p => GetGrid().SnapToPosition(p)).ToList();
 

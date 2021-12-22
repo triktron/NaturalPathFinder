@@ -5,7 +5,8 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public abstract class Path
+[System.Serializable]
+public abstract class Path: ScriptableObject
 {
     public bool DrawGridLines = false;
     public bool DrawSplineLines = false;
@@ -43,19 +44,21 @@ public abstract class Path
     {
         if (_Spline != null && DrawSplineLines)
         {
-            Handles.color = SplineColor;
 
-            var segCount = 20 * PathNodes.Length;
+            var segCount = 2 * PathNodes.Length;
             var seg = 1f / segCount;
             var lastSeg = _Spline.GetCurve(0);
-
-            for (int i = 0; i <= segCount; i++)
+            
+            Handles.color = SplineColor;
+            for (int i = 0; i < segCount; i++)
             {
                 var t = seg * i;
                 var currentSeg = _Spline.GetCurve(t);
                 Handles.DrawLine(lastSeg, currentSeg, 3);
                 lastSeg = currentSeg;
             }
+
+            Handles.DrawLine(lastSeg, _Grid.GetPoint(PathNodes.Last()), 3);
         }
     }
 

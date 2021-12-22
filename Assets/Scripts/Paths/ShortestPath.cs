@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Utils;
 
+[CreateAssetMenu(fileName = "ShortestPath", menuName = "Paths/Shortest Path")]
 public class ShortestPath : Path
 {
     public override void CalcualtePath(List<Grid.Position> waypoints)

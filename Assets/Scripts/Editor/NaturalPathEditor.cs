@@ -60,6 +60,8 @@ public class NaturalPathEditor : Editor
         foreach (var path in _Path.GetPaths())
         {
             path.DrawHandlesGrid();
+
+            if (path._Spline == null) _Path.UpdatePaths();
             path.DrawHandlesSpline();
         }
 

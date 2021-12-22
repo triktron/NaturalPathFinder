@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "StraightPath", menuName ="Paths/Straight Path")]
 public class StraightPath : Path
 {
-    public override void CalcualtePath(List<Grid.Position> waypoints)
+    public override List<Grid.Position> CalcualtePath(List<Grid.Position> waypoints)
     {
         List<Grid.Position> path = new List<Grid.Position>();
 
@@ -23,9 +23,7 @@ public class StraightPath : Path
             }
         }
 
-        PathNodes = RemoveInlinePoints(path,1f).ToArray();
-
-        _Spline = new Spline(PathNodes.Select(p => new CP(_Grid.GetPoint(p),1)).ToArray(), 4);
+        return RemoveInlinePoints(path,1f).ToList();
     }
 
     public List<Grid.Position> Line(Grid.Position from, Grid.Position to)

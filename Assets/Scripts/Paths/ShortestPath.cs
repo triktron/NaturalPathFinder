@@ -7,7 +7,7 @@ using Utils;
 [CreateAssetMenu(fileName = "ShortestPath", menuName = "Paths/Shortest Path")]
 public class ShortestPath : Path
 {
-    public override void CalcualtePath(List<Grid.Position> waypoints)
+    public override List<Grid.Position> CalcualtePath(List<Grid.Position> waypoints)
     {
         List<Grid.Position> path = new List<Grid.Position>();
         var pf = new AStarPathFinding<Grid.Position>(Neighbours, Distance, Distance);
@@ -24,9 +24,7 @@ public class ShortestPath : Path
                 path.Add(pathSection[j]);
             }
         }
-        PathNodes = RemoveInlinePoints(path, 1f).ToArray();
-        PathNodes = path.ToArray();
-        _Spline = new Spline(PathNodes.Select(p => new CP(_Grid.GetPoint(p), 1)).ToArray(), 4);
+        return RemoveInlinePoints(path, 1f).ToList();
     }
 
     private List<Grid.Position> Neighbours(Grid.Position from)

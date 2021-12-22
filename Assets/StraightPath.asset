@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c0c64e4579c8434388a34840a00374f, type: 3}
   m_Name: StraightPath
   m_EditorClassIdentifier: 
-  DrawGridLines: 0
-  DrawSplineLines: 0
-  GridLineColor: {r: 0, g: 1, b: 1, a: 1}
-  SplineColor: {r: 1, g: 0, b: 0, a: 1}
+  DrawGridLines: 1
+  DrawSplineLines: 1
+  GridLineColor: {r: 1, g: 0, b: 0.60784316, a: 0.6}
+  SplineColor: {r: 1, g: 0, b: 0.60640574, a: 1}

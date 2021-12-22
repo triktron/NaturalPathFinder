@@ -12,6 +12,7 @@ public class NaturalPathEditor : Editor
     void OnEnable()
     {
         _Path = (NaturalPath)target;
+        _Path.UpdatePaths();
     }
 
     void OnSceneGUI()
@@ -46,10 +47,17 @@ public class NaturalPathEditor : Editor
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(path.GetName() + " Settings", EditorStyles.boldLabel);
 
+            EditorGUI.BeginChangeCheck();
+
             path.DrawGridLines = EditorGUILayout.Toggle("Draw Grid Lines", path.DrawGridLines);
             path.DrawSplineLines = EditorGUILayout.Toggle("Draw Spline Lines", path.DrawSplineLines);
             path.GridLineColor = EditorGUILayout.ColorField("Grid Line Color", path.GridLineColor);
             path.SplineColor = EditorGUILayout.ColorField("Spline Color", path.SplineColor);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(path);
+            }
         }
     }
 
@@ -61,7 +69,6 @@ public class NaturalPathEditor : Editor
         {
             path.DrawHandlesGrid();
 
-            if (path._Spline == null) _Path.UpdatePaths();
             path.DrawHandlesSpline();
         }
 

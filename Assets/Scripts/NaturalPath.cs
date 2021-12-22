@@ -20,6 +20,7 @@ public class NaturalPath : MonoBehaviour
         {
             _GridSize = value;
             GetGrid().SetGridSize(_GridSize);
+            UpdatePaths();
         }
     }
 
@@ -108,7 +109,7 @@ public class NaturalPath : MonoBehaviour
 
         foreach (var path in GetPaths())
         {
-            path.CalcualtePath(waypoints);
+            path.SetWaypoints(waypoints);
         }
     }
 

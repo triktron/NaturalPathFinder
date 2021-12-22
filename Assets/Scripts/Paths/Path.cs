@@ -14,51 +14,83 @@ public abstract class Path: ScriptableObject
     public Color SplineColor = Color.red;
 
     public Grid _Grid;
-    public Spline _Spline;
 
-    public Grid.Position[] PathNodes = new Grid.Position[0];
+    private List<Grid.Position> _Waypoints;
+
+    private Cache<Vector3> _PathNodes;
+    private Cache<Vector3> _SplineNodes;
+    public Path()
+    {
+        _PathNodes = new Cache<Vector3>(() =>
+        {
+            return CalcualtePath(_Waypoints).Select(n => _Grid.GetPoint(n)).ToArray();
+        });
+
+        _SplineNodes = new Cache<Vector3>(() =>
+        {
+            var nodes = _PathNodes.GetValue();
+            var spline = new Spline(nodes.Select(p => new CP(p, 1)).ToArray(), 4);
+
+            var segCount = 2 * nodes.Length;
+            var seg = 1f / segCount;
+            var splinePoints = new Vector3[segCount+1];
+
+            for (int i = 0; i < segCount; i++)
+            {
+                var t = seg * i;
+                splinePoints[i] = spline.GetCurve(t);
+            }
+            splinePoints[segCount] = nodes.Last();
+
+            return splinePoints;
+        });
+    }
 
     public virtual void Init(Grid grid)
     {
         _Grid = grid;
     }
 
-    public abstract void CalcualtePath(List<Grid.Position> waypoints);
+    public abstract List<Grid.Position> CalcualtePath(List<Grid.Position> waypoints);
     public abstract string GetName();
+
+    public Vector3[] GetPathNodes()
+    {
+        return _PathNodes.GetValue();
+    }
+
+    public void SetWaypoints(List<Grid.Position> waypoints)
+    {
+        _Waypoints = waypoints;
+        _PathNodes.SetDirty();
+        _SplineNodes.SetDirty();
+    }
 
     public void DrawHandlesGrid()
     {
         if (DrawGridLines)
         {
+            var path = _PathNodes.GetValue();
+
             Handles.color = GridLineColor;
-            for (int i = 0; i < PathNodes.Length - 1; i++)
+            for (int i = 0; i < path.Length - 1; i++)
             {
-                Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes[i]), Vector3.up, 2);
-                Handles.DrawLine(_Grid.GetPoint(PathNodes[i]), _Grid.GetPoint(PathNodes[i + 1]), 1);
+                Handles.DrawSolidDisc(path[i], Vector3.up, 2);
+                Handles.DrawLine(path[i], path[i + 1], 1);
             }
 
-            if (PathNodes.Length != 0) Handles.DrawSolidDisc(_Grid.GetPoint(PathNodes.Last()), Vector3.up, 2);
+            if (path.Length != 0) Handles.DrawSolidDisc(path.Last(), Vector3.up, 2);
         }
     }
+
     public void DrawHandlesSpline()
     {
-        if (_Spline != null && DrawSplineLines)
+        if (DrawSplineLines)
         {
+            var spline = _SplineNodes.GetValue();
 
-            var segCount = 2 * PathNodes.Length;
-            var seg = 1f / segCount;
-            var lastSeg = _Spline.GetCurve(0);
-            
             Handles.color = SplineColor;
-            for (int i = 0; i < segCount; i++)
-            {
-                var t = seg * i;
-                var currentSeg = _Spline.GetCurve(t);
-                Handles.DrawLine(lastSeg, currentSeg, 3);
-                lastSeg = currentSeg;
-            }
-
-            Handles.DrawLine(lastSeg, _Grid.GetPoint(PathNodes.Last()), 3);
+            Handles.DrawAAPolyLine(EditorGUIUtility.whiteTexture, 4, spline);
         }
     }
 

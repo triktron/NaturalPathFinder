@@ -78,7 +78,12 @@ public abstract class Path: ScriptableObject
             var path = _PathNodes.GetValue();
 
             Handles.color = SplineColor;
-            Handles.DrawAAPolyLine(2, path);
+
+            for (int i = 0; i < path.Length - 1; i++)
+            {
+                Handles.DrawLine(path[i], path[i + 1], 2);
+            }
+            //Handles.DrawAAPolyLine(2, path);
 
             foreach (var p in path)
             {
@@ -94,7 +99,14 @@ public abstract class Path: ScriptableObject
             var spline = _SplineNodes.GetValue();
 
             Handles.color = SplineColor;
-            Handles.DrawAAPolyLine(EditorGUIUtility.whiteTexture, 4, spline);
+
+            for (int i = 0; i < spline.Length-1; i++)
+            {
+                Handles.DrawLine(spline[i], spline[i+1], 4);
+            }
+
+
+            //Handles.DrawAAPolyLine(EditorGUIUtility.whiteTexture, 4, spline);
         }
     }
 

@@ -10,7 +10,7 @@ public class ShortestPath : Path
     public override List<Grid.Position> CalcualtePath(List<Grid.Position> waypoints)
     {
         List<Grid.Position> path = new List<Grid.Position>();
-        var pf = new AStarPathFinding<Grid.Position>(Neighbours, Distance, Distance);
+        var pf = new AStarPathFinding<Grid.Position>(_Grid.GetNaighbours, Distance, Heuristic);
 
 
         for (int i = 0; i < waypoints.Count - 1; i++)
@@ -27,27 +27,13 @@ public class ShortestPath : Path
         return RemoveInlinePoints(path, 1f).ToList();
     }
 
-    private List<Grid.Position> Neighbours(Grid.Position from)
+    private float Distance(Grid.Position from, Grid.Position to, List<Grid.Position> last)
     {
-        var neighbours = new List<Grid.Position>();
-        var segments = _Grid.GetSegments();
-
-        if (from.x > 0) neighbours.Add(new Grid.Position(from.x - 1, from.y, segments));
-        if (from.x < segments.x - 1) neighbours.Add(new Grid.Position(from.x + 1, from.y, segments));
-        if (from.y > 0) neighbours.Add(new Grid.Position(from.x, from.y - 1, segments));
-        if (from.y < segments.y - 1) neighbours.Add(new Grid.Position(from.x, from.y + 1, segments));
-        if (from.x > 0 && from.y > 0) neighbours.Add(new Grid.Position(from.x - 1, from.y - 1, segments));
-        if (from.x < segments.x - 1 && from.y > 0) neighbours.Add(new Grid.Position(from.x + 1, from.y - 1, segments));
-        if (from.x > 0 && from.y < segments.y - 1) neighbours.Add(new Grid.Position(from.x - 1, from.y + 1, segments));
-        if (from.x < segments.x - 1 && from.y < segments.y - 1) neighbours.Add(new Grid.Position(from.x + 1, from.y + 1, segments));
-
-
-        return neighbours;
+        return Vector3.Distance(_Grid.GetPoint(from), _Grid.GetPoint(to));
     }
-
-    private float Distance(Grid.Position from, Grid.Position to)
+    private float Heuristic(Grid.Position from, Grid.Position to)
     {
-        return Vector2.Distance(new Vector2(from.x, from.y), new Vector2(to.x, to.y));
+        return Vector3.Distance(_Grid.GetPoint(from), _Grid.GetPoint(to));
     }
 
     public override string GetName()

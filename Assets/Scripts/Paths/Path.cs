@@ -62,6 +62,11 @@ public abstract class Path: ScriptableObject
     public void SetWaypoints(List<Grid.Position> waypoints)
     {
         _Waypoints = waypoints;
+        SetPathDirty();
+    }
+
+    public void SetPathDirty()
+    {
         _PathNodes.SetDirty();
         _SplineNodes.SetDirty();
     }
@@ -72,14 +77,13 @@ public abstract class Path: ScriptableObject
         {
             var path = _PathNodes.GetValue();
 
-            Handles.color = GridLineColor;
-            for (int i = 0; i < path.Length - 1; i++)
-            {
-                Handles.DrawSolidDisc(path[i], Vector3.up, 2);
-                Handles.DrawLine(path[i], path[i + 1], 1);
-            }
+            Handles.color = SplineColor;
+            Handles.DrawAAPolyLine(2, path);
 
-            if (path.Length != 0) Handles.DrawSolidDisc(path.Last(), Vector3.up, 2);
+            foreach (var p in path)
+            {
+                Handles.DrawSolidDisc(p, Vector3.up, 2);
+            }
         }
     }
 
@@ -111,5 +115,9 @@ public abstract class Path: ScriptableObject
         }
 
         return newPoints;
+    }
+
+    public virtual void DrawInspector()
+    {
     }
 }

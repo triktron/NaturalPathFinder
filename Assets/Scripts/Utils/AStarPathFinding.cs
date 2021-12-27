@@ -9,7 +9,7 @@ namespace Utils
     public class AStarPathFinding<TPosition>
     {
         public delegate List<TPosition> NeighbourStrategy(TPosition from);
-        public delegate float DistanceStrategy(TPosition from, TPosition to);
+        public delegate float DistanceStrategy(TPosition from, TPosition to, List<TPosition> previous);
         public delegate float HeuristicStrategy(TPosition from, TPosition to);
 
 
@@ -44,7 +44,8 @@ namespace Utils
 
                 foreach (var neigbour in neigbours)
                 {
-                    var tentiveGScore = gScores[current] + _distance(current, neigbour);
+                    TPosition prev = cameFrom.ContainsKey(current) ? cameFrom[current] : from;
+                    var tentiveGScore = gScores[current] + _distance(current, neigbour, ReconstructPath(cameFrom, current, 4));
 
                     if (tentiveGScore < gScores.GetValueOrDefault(neigbour, float.PositiveInfinity))
                     {
@@ -60,11 +61,11 @@ namespace Utils
             return new List<TPosition>(0);
         }
 
-        private List<TPosition> ReconstructPath(Dictionary<TPosition, TPosition> cameFrom, TPosition current)
+        private List<TPosition> ReconstructPath(Dictionary<TPosition, TPosition> cameFrom, TPosition current, int maxDepth = int.MaxValue)
         {
             var path = new List<TPosition>() { current };
 
-            while (cameFrom.ContainsKey(current))
+            while (cameFrom.ContainsKey(current) && path.Count < maxDepth)
             {
                 current = cameFrom[current];
 

@@ -53,10 +53,12 @@ public class NaturalPathEditor : Editor
             path.DrawSplineLines = EditorGUILayout.Toggle("Draw Spline Lines", path.DrawSplineLines);
             path.GridLineColor = EditorGUILayout.ColorField("Grid Line Color", path.GridLineColor);
             path.SplineColor = EditorGUILayout.ColorField("Spline Color", path.SplineColor);
+            path.DrawInspector();
 
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(path);
+                path.SetPathDirty();
             }
         }
     }

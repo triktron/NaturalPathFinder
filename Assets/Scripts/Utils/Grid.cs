@@ -104,6 +104,23 @@ public class Grid
         return new Position(x, y, _Segments);
     }
 
+    public List<Position> GetNaighbours(Position pos)
+    {
+        var neighbours = new List<Position>();
+
+        if (pos.x > 0)                                          neighbours.Add(new Position(pos.x - 1, pos.y, _Segments));
+        if (pos.y > 0)                                          neighbours.Add(new Position(pos.x, pos.y - 1, _Segments));
+        if (pos.x > 0 && pos.y > 0)                             neighbours.Add(new Position(pos.x - 1, pos.y - 1, _Segments));
+        if (pos.x < _Segments.x - 1)                            neighbours.Add(new Position(pos.x + 1, pos.y, _Segments));
+        if (pos.y < _Segments.y - 1)                            neighbours.Add(new Position(pos.x, pos.y + 1, _Segments));
+        if (pos.x < _Segments.x - 1 && pos.y > 0)               neighbours.Add(new Position(pos.x + 1, pos.y - 1, _Segments));
+        if (pos.x > 0 && pos.y < _Segments.y - 1)               neighbours.Add(new Position(pos.x - 1, pos.y + 1, _Segments));
+        if (pos.x < _Segments.x - 1 && pos.y < _Segments.y - 1) neighbours.Add(new Position(pos.x + 1, pos.y + 1, _Segments));
+
+
+        return neighbours;
+    }
+
 
     public Vector2 GetSize() => _Size;
     public Vector2Int GetSegments() => _Segments;

@@ -357,12 +357,18 @@ MonoBehaviour:
   DrawWaypoints: 1
   _Points:
   - {x: 366.83716, y: 615.43195}
-  - {x: 514.8408, y: 1776.9662}
+  - {x: 542.5239, y: 1790.1001}
+  - {x: 1236.2437, y: 1532.9088}
+  - {x: 986.41797, y: 558.3959}
+  - {x: 1624.0205, y: 470.2917}
+  - {x: 2027.0791, y: 501.89856}
+  - {x: 1779.8745, y: 2189.4858}
+  - {x: 792.15283, y: 2319.7937}
   _GridSize: 30
   _Paths:
   - {fileID: 11400000, guid: c8575a32840d8ed478b10160b5a8344d, type: 2}
   - {fileID: 11400000, guid: 817d7e95d8b679f4ca9721398a12f307, type: 2}
-  - {fileID: 11400000, guid: 1b951bd369698794e86530e2cdb2034e, type: 2}
+  - {fileID: 11400000, guid: e90418924d0889647841f2541251f3d4, type: 2}
 --- !u!154 &789882935
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -419,12 +425,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bc8db84d643e9d4b8e81ed7693fa01f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DrawGrid: 1
+  DrawGrid: 0
   DrawWaypoints: 1
   _Points:
-  - {x: 515.06244, y: 1617.6033}
+  - {x: 335.31442, y: 1524.9518}
   - {x: 2260.359, y: 1407.1737}
-  _GridSize: 30
+  _GridSize: 40
   _Paths:
   - {fileID: 11400000, guid: c8575a32840d8ed478b10160b5a8344d, type: 2}
   - {fileID: 11400000, guid: 817d7e95d8b679f4ca9721398a12f307, type: 2}

@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DrawGridLines: 0
   DrawSplineLines: 1
+  DrawMetrics: 1
   GridLineColor: {r: 1, g: 0.48650533, b: 0, a: 0.6}
   SplineColor: {r: 1, g: 0.48627454, b: 0, a: 1}
-  DeltaHeightCost: 2.5
-  LengthCost: 3
-  AngleCost: 5
+  DeltaHeightCost: 3
+  LengthCost: 2
+  AngleCost: 3
   AngleCostCurve:
     serializedVersion: 2
     m_Curve:
@@ -42,12 +43,12 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.00036621094
-      inSlope: -364.76303
-      outSlope: -364.76303
+      value: 30
+      inSlope: -127.649086
+      outSlope: -127.649086
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.035874486
+      inWeight: 0.06498575
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

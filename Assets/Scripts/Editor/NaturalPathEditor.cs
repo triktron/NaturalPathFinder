@@ -47,18 +47,37 @@ public class NaturalPathEditor : Editor
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(path.GetName() + " Settings", EditorStyles.boldLabel);
 
-            EditorGUI.BeginChangeCheck();
 
             path.DrawGridLines = EditorGUILayout.Toggle("Draw Grid Lines", path.DrawGridLines);
             path.DrawSplineLines = EditorGUILayout.Toggle("Draw Spline Lines", path.DrawSplineLines);
+            path.DrawMetrics = EditorGUILayout.Toggle("Calculate Metrics", path.DrawMetrics);
             path.GridLineColor = EditorGUILayout.ColorField("Grid Line Color", path.GridLineColor);
             path.SplineColor = EditorGUILayout.ColorField("Spline Color", path.SplineColor);
+            EditorGUI.BeginChangeCheck();
             path.DrawInspector();
 
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(path);
                 path.SetPathDirty();
+            }
+        }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Metrics", EditorStyles.boldLabel);
+        foreach (var path in _Path.GetPaths())
+        {
+            if (path.DrawMetrics)
+            {
+                var metric = path.Metrics.GetMetric();
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField(path.GetName() + " Metrics", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField($"Length: {metric.Length}m");
+                EditorGUILayout.LabelField($"Height Delta: {metric.HeightDelta}m");
+                EditorGUILayout.LabelField($"Avg Slope: {metric.AvgSlope}deg");
+                EditorGUILayout.LabelField($"Curvature: {metric.Curvature}deg");
+                EditorGUILayout.LabelField($"Avg Curvature: {metric.AvgCurvature}deg");
             }
         }
     }

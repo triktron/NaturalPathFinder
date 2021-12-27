@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Cache<T>
 {
-    public delegate T[] CalculationFunction();
+    public delegate T CalculationFunction();
     public Cache(CalculationFunction func)
     {
         _Func = func;
     }
 
     private CalculationFunction _Func;
-    private T[] _Value = new T[0];
+    private T _Value = default(T);
     private bool _IsDirty = false;
 
-    public T[] GetValue() {
+    public T GetValue() {
         if (_IsDirty)
         {
             _Value = _Func();

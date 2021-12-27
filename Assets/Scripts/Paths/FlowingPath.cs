@@ -46,10 +46,10 @@ public class FlowingPath : Path
         var fromPos2 = new Vector2(from.x, from.y);
         var toPos2 = new Vector2(to.x, to.y);
         var lastPos2 = new Vector2(last[0].x, last[0].y); //AveragePos(last);
-        var angle = Mathf.Abs(Vector2.SignedAngle(lastPos2 - fromPos2, toPos2 - fromPos2) / 180);
+        var angle = (180 - Mathf.Abs(Vector2.SignedAngle(lastPos2 - fromPos2, toPos2 - fromPos2))) / 180f;
 
 
-        return dist * LengthCost + Mathf.Pow(heightDelta, DeltaHeightCost) + AngleCostCurve.Evaluate(angle);
+        return dist * LengthCost + Mathf.Pow(heightDelta, DeltaHeightCost) + AngleCostCurve.Evaluate(angle) * AngleCost;
     }
 
     private Vector2 AveragePos(List<Grid.Position> positions)

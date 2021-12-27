@@ -1,6 +1,8 @@
 using kmty.NURBS;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -10,23 +12,30 @@ public abstract class Path: ScriptableObject
 {
     public bool DrawGridLines = false;
     public bool DrawSplineLines = false;
+    public bool DrawMetrics = false;
     public Color GridLineColor = Color.cyan;
     public Color SplineColor = Color.red;
 
+    private const float _SplineWalkDist = 0.001f;
+
+    public Metrics Metrics = new Metrics();
+
     public Grid _Grid;
+
+    
 
     private List<Grid.Position> _Waypoints;
 
-    private Cache<Vector3> _PathNodes;
-    private Cache<Vector3> _SplineNodes;
+    private Cache<Vector3[]> _PathNodes;
+    private Cache<Vector3[]> _SplineNodes;
     public Path()
     {
-        _PathNodes = new Cache<Vector3>(() =>
+        _PathNodes = new Cache<Vector3[]>(() =>
         {
             return CalcualtePath(_Waypoints).Select(n => _Grid.GetPoint(n)).ToArray();
         });
 
-        _SplineNodes = new Cache<Vector3>(() =>
+        _SplineNodes = new Cache<Vector3[]>(() =>
         {
             var nodes = _PathNodes.GetValue();
             var spline = new Spline(nodes.Select(p => new CP(p, 1)).ToArray(), 4);
@@ -44,6 +53,7 @@ public abstract class Path: ScriptableObject
 
             return splinePoints;
         });
+        Metrics.SetPath(_SplineNodes);
     }
 
     public virtual void Init(Grid grid)
@@ -69,6 +79,7 @@ public abstract class Path: ScriptableObject
     {
         _PathNodes.SetDirty();
         _SplineNodes.SetDirty();
+        Metrics.SetDirty();
     }
 
     public void DrawHandlesGrid()
@@ -127,6 +138,11 @@ public abstract class Path: ScriptableObject
         }
 
         return newPoints;
+    }
+
+    public void CalculateMetrics()
+    {
+
     }
 
     public virtual void DrawInspector()

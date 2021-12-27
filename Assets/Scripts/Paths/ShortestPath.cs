@@ -24,7 +24,8 @@ public class ShortestPath : Path
                 path.Add(pathSection[j]);
             }
         }
-        return RemoveInlinePoints(path, 1f).ToList();
+        //return RemoveInlinePoints(path, 1f).ToList();
+        return path;
     }
 
     private float Distance(Grid.Position from, Grid.Position to, List<Grid.Position> last)

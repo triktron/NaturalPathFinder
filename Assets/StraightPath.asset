@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DrawGridLines: 0
   DrawSplineLines: 1
+  DrawMetrics: 1
   GridLineColor: {r: 1, g: 0, b: 0.60784316, a: 0.6}
   SplineColor: {r: 1, g: 0, b: 0.60640574, a: 1}

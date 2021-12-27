@@ -23,7 +23,8 @@ public class StraightPath : Path
             }
         }
 
-        return RemoveInlinePoints(path,1f).ToList();
+        //return RemoveInlinePoints(path,1f).ToList();
+        return path;
     }
 
     public List<Grid.Position> Line(Grid.Position from, Grid.Position to)
